@@ -5,9 +5,16 @@
 // Tokens: WIN-CI/WIN-Wiki docs/design-tokens.md
 // =========================================================
 
-$win-yellow: #EDFB01;  // primary surface (top nav), black content only
-$win-purple: #5629D8;  // accent: links, sidebar, primary elements
-$win-ink:    #141115;  // near-black text
+// Brand colors (full intensity) - reserved for small accents.
+$win-yellow-brand: #EDFB01;
+$win-purple-brand: #5629D8;
+
+// Softened working tokens (win.6): the full-intensity brand colors read as
+// "really bright" across large surfaces (nav, sidebar), so tone them down a
+// notch while keeping the same hue/identity.
+$win-yellow: desaturate(darken($win-yellow-brand, 4%), 16%);   // nav surface
+$win-purple: desaturate(darken($win-purple-brand, 6%), 12%);   // sidebar/accents/links
+$win-ink:    #141115;
 
 // ---------------------------------------------------------
 // Typography -> Inter
@@ -36,9 +43,7 @@ $win-ink:    #141115;  // near-black text
 }
 
 // ---------------------------------------------------------
-// Top navigation bar -> WIN neon surface, black content.
-// Specificity must beat Vuetify's `.v-application .black` (0,2,0).
-// Wiki.js paints the visible surface on `.nav-header-inner`, so cover both.
+// Top navigation bar -> softened WIN yellow-green, black content.
 // ---------------------------------------------------------
 .v-application .nav-header.v-app-bar,
 .v-application .nav-header.black,
@@ -55,8 +60,7 @@ $win-ink:    #141115;  // near-black text
     color: #000 !important;
   }
 
-  // Search field: white pill with dark text (high contrast on neon).
-  // (Overrides the dark solo-field look that made black-on-dark unreadable.)
+  // Search field: white pill with dark text (high contrast).
   .v-text-field.v-text-field--solo .v-input__slot {
     background-color: #fff !important;
   }
@@ -69,9 +73,7 @@ $win-ink:    #141115;  // near-black text
 }
 
 // ---------------------------------------------------------
-// Replace all blue accents with WIN purple.
-// Doubling `.v-application` raises specificity to beat Vuetify's
-// runtime theme utilities (`.v-application .primary`, 0,2,0 !important).
+// Replace all blue accents with softened WIN purple.
 // ---------------------------------------------------------
 .v-application.v-application .primary {
   background-color: $win-purple !important;
@@ -81,14 +83,23 @@ $win-ink:    #141115;  // near-black text
   color: $win-purple !important;
   caret-color: $win-purple !important;
 }
-// History icon and other indigo accents
 .v-application.v-application .indigo--text {
   color: $win-purple !important;
 }
-// Sidebar in MIXED nav mode uses hardcoded blue shades
 .v-application.v-application .blue.darken-2,
 .v-application.v-application .blue.darken-3 {
   background-color: $win-purple !important;
+}
+
+// ---------------------------------------------------------
+// Comments panel -> WIN palette (was stock blue-grey #607D8B)
+// ---------------------------------------------------------
+.comments-header {
+  background-color: $win-purple !important;
+  color: #fff !important;
+}
+.comments-main {
+  background-color: #f6f6f7 !important;
 }
 
 // ---------------------------------------------------------
@@ -98,7 +109,6 @@ $win-ink:    #141115;  // near-black text
   color: $win-purple;
   &:hover { color: darken($win-purple, 10%); }
 }
-// h1 was hardcoded blue with a blue underline -> ink heading, purple underline
 .v-main .contents h1 {
   color: $win-ink !important;
 
@@ -107,7 +117,7 @@ $win-ink:    #141115;  // near-black text
   }
 }
 
-// Welcome splash primary button -> WIN purple
+// Welcome splash primary button
 .welcome .v-btn.primary {
   background-color: $win-purple !important;
   border-color: $win-purple !important;
