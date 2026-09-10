@@ -35,13 +35,18 @@ $win-purple: #5629D8;  // accent / links
   }
 }
 
-// Top navigation bar -> WIN neon surface with black content
-.nav-header {
+// Top navigation bar -> WIN neon surface with black content.
+// Specificity must beat Vuetify's baked-in color class `.v-application .black`
+// (0,2,0). These selectors are 0,3,0.
+.v-application .nav-header.v-app-bar,
+.v-application .nav-header.black {
   background-color: $win-yellow !important;
-
+}
+.v-application .nav-header {
   .v-toolbar__content,
   .v-toolbar__title,
   .v-btn,
+  .v-btn .v-icon,
   .v-icon,
   .v-text-field input,
   input,
@@ -58,11 +63,9 @@ $win-purple: #5629D8;  // accent / links
   &:hover { color: darken($win-purple, 10%); }
 }
 
-// Welcome splash (shown before a home page exists) -> brand the primary button
-.welcome {
-  .v-btn.primary {
-    background-color: $win-purple !important;
-    border-color: $win-purple !important;
-    color: #fff !important;
-  }
+// Welcome splash primary button -> WIN purple
+.welcome .v-btn.primary {
+  background-color: $win-purple !important;
+  border-color: $win-purple !important;
+  color: #fff !important;
 }
