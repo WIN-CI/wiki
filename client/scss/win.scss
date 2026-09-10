@@ -184,7 +184,7 @@ $win-transition:   .2s cubic-bezier(.4, 0, .2, 1);
 
   .v-responsive__sizer { display: none !important; }
   .v-image__image {
-    background-image: url('/_assets/svg/win-logo.svg') !important;
+    background-image: url('../static/svg/win-logo.svg') !important;
     background-size: contain !important;
     background-position: center !important;
   }
