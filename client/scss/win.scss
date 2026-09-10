@@ -1,36 +1,35 @@
 // =========================================================
 // WIN CUSTOM THEME OVERRIDES (light mode)
-// Compiled into app.css (the always-loaded main bundle) via
-// an @import at the end of client/scss/app.scss.
+// Compiled into app.css via @import at end of client/scss/app.scss.
 // Tokens: WIN-CI/WIN-Wiki docs/design-tokens.md
+//
+// CI COLORS ARE FIXED AND EXACT. WIN is a design agency and strict about
+// brand colors - do NOT desaturate, darken, or otherwise alter these hues.
 // =========================================================
 
-// Brand colors (full intensity) - reserved for small accents.
-$win-yellow-brand: #EDFB01;
-$win-purple-brand: #5629D8;
+$win-yellow: #EDFB01;  // brand neon - top nav surface, black content only
+$win-purple: #5629D8;  // brand purple - sidebar, accents, links
+$win-ink:    #141115;  // near-black text
 
-// Softened working tokens (win.6): the full-intensity brand colors read as
-// "really bright" across large surfaces (nav, sidebar), so tone them down a
-// notch while keeping the same hue/identity.
-$win-yellow: desaturate(darken($win-yellow-brand, 4%), 16%);   // nav surface
-$win-purple: desaturate(darken($win-purple-brand, 6%), 12%);   // sidebar/accents/links
-$win-ink:    #141115;
+// Modern component treatment (colors untouched)
+$win-radius:     12px;
+$win-radius-sm:  8px;
+$win-radius-pill: 24px;
+$win-shadow:       0 2px 8px rgba(20, 17, 21, .08);
+$win-shadow-hover: 0 8px 24px rgba(20, 17, 21, .14);
+$win-transition:   .2s cubic-bezier(.4, 0, .2, 1);
 
 // ---------------------------------------------------------
 // Typography -> Inter
 // ---------------------------------------------------------
 @font-face {
   font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
+  font-style: normal; font-weight: 100 900; font-display: swap;
   src: url('../fonts/default/inter-latin-wght-normal.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter';
-  font-style: italic;
-  font-weight: 100 900;
-  font-display: swap;
+  font-style: italic; font-weight: 100 900; font-display: swap;
   src: url('../fonts/default/inter-latin-wght-italic.woff2') format('woff2');
 }
 .v-application {
@@ -43,7 +42,7 @@ $win-ink:    #141115;
 }
 
 // ---------------------------------------------------------
-// Top navigation bar -> softened WIN yellow-green, black content.
+// Top navigation bar -> WIN neon, black content, soft separation shadow
 // ---------------------------------------------------------
 .v-application .nav-header.v-app-bar,
 .v-application .nav-header.black,
@@ -52,17 +51,17 @@ $win-ink:    #141115;
   background-color: $win-yellow !important;
 }
 .v-application .nav-header {
-  .v-toolbar__title,
-  .v-btn,
-  .v-btn .v-icon,
-  > .v-icon,
-  a {
+  box-shadow: 0 2px 12px rgba(20, 17, 21, .12) !important;
+
+  .v-toolbar__title, .v-btn, .v-btn .v-icon, > .v-icon, a {
     color: #000 !important;
   }
 
-  // Search field: white pill with dark text (high contrast).
+  // Search field: modern white pill, dark text
   .v-text-field.v-text-field--solo .v-input__slot {
     background-color: #fff !important;
+    border-radius: $win-radius-pill !important;
+    box-shadow: none !important;
   }
   .v-text-field input,
   .v-text-field .v-label,
@@ -73,7 +72,7 @@ $win-ink:    #141115;
 }
 
 // ---------------------------------------------------------
-// Replace all blue accents with softened WIN purple.
+// Blue accents -> WIN purple
 // ---------------------------------------------------------
 .v-application.v-application .primary {
   background-color: $win-purple !important;
@@ -83,37 +82,84 @@ $win-ink:    #141115;
   color: $win-purple !important;
   caret-color: $win-purple !important;
 }
-.v-application.v-application .indigo--text {
-  color: $win-purple !important;
-}
+.v-application.v-application .indigo--text { color: $win-purple !important; }
 .v-application.v-application .blue.darken-2,
-.v-application.v-application .blue.darken-3 {
-  background-color: $win-purple !important;
-}
+.v-application.v-application .blue.darken-3 { background-color: $win-purple !important; }
 
 // ---------------------------------------------------------
-// Comments panel -> WIN palette (was stock blue-grey #607D8B)
+// MODERN COMPONENTS (rounded corners + soft shadows, no hard borders)
 // ---------------------------------------------------------
+.v-application {
+  // Elevated surfaces: cards, menus, dialogs, dropdowns
+  .v-card,
+  .v-menu__content,
+  .v-dialog > .v-card,
+  .v-autocomplete__content,
+  .v-list.v-select-list,
+  .v-sheet.v-list {
+    border-radius: $win-radius !important;
+  }
+  .v-card:not(.v-card--flat):not(.nav-header):not(.nav-header-inner) {
+    box-shadow: $win-shadow !important;
+  }
+  .v-menu__content { box-shadow: $win-shadow-hover !important; }
+
+  // Buttons: rounder, smooth hover
+  .v-btn:not(.v-btn--round):not(.v-btn--icon):not(.v-btn--fab) {
+    border-radius: $win-radius-sm !important;
+    text-transform: none;
+    letter-spacing: .01em;
+    transition: box-shadow $win-transition, transform $win-transition, background-color $win-transition;
+  }
+  .v-btn.v-btn--has-bg:hover { box-shadow: $win-shadow-hover !important; }
+}
+
+// Comments panel -> WIN palette + modern card
+.comments-container {
+  border-radius: $win-radius !important;
+  overflow: hidden;
+  box-shadow: $win-shadow !important;
+}
 .comments-header {
   background-color: $win-purple !important;
   color: #fff !important;
 }
-.comments-main {
-  background-color: #f6f6f7 !important;
-}
+.comments-main { background-color: #f6f6f7 !important; }
 
 // ---------------------------------------------------------
-// Content: links + headings
+// Content: links, headings, and modernized content blocks
 // ---------------------------------------------------------
-.v-main .contents a:not(.is-internal-link.is-invalid-page) {
-  color: $win-purple;
-  &:hover { color: darken($win-purple, 10%); }
-}
-.v-main .contents h1 {
-  color: $win-ink !important;
+.v-main .contents {
+  a:not(.is-internal-link.is-invalid-page) {
+    color: $win-purple;
+    &:hover { color: darken($win-purple, 10%); }
+  }
 
-  &::after {
-    background: linear-gradient(to right, $win-purple, rgba($win-purple, 0)) !important;
+  h1 {
+    color: $win-ink !important;
+    &::after {
+      background: linear-gradient(to right, $win-purple, rgba($win-purple, 0)) !important;
+    }
+  }
+
+  // Softer, rounder content blocks
+  table {
+    border: none !important;
+    border-radius: $win-radius !important;
+    overflow: hidden;
+    box-shadow: $win-shadow;
+  }
+  blockquote { border-radius: $win-radius !important; }
+  .prismjs { border-radius: $win-radius !important; }
+  details { border-radius: $win-radius !important; }
+  code:not([class^="language-"]) { border-radius: 6px; }
+
+  ul.links-list li {
+    border-radius: $win-radius !important;
+    box-shadow: $win-shadow;
+    border-left-width: 4px;
+    transition: box-shadow $win-transition, transform $win-transition;
+    &:hover { box-shadow: $win-shadow-hover; transform: translateY(-1px); }
   }
 }
 
@@ -122,4 +168,5 @@ $win-ink:    #141115;
   background-color: $win-purple !important;
   border-color: $win-purple !important;
   color: #fff !important;
+  border-radius: $win-radius-sm !important;
 }
