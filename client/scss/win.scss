@@ -37,9 +37,13 @@ $win-purple: #5629D8;  // accent / links
 
 // Top navigation bar -> WIN neon surface with black content.
 // Specificity must beat Vuetify's baked-in color class `.v-application .black`
-// (0,2,0). These selectors are 0,3,0.
+// (0,2,0). These selectors are 0,3,0. Wiki.js nests `.nav-header-inner` (the
+// element that paints the visible toolbar surface) which also carries `.black`,
+// so it must be covered too.
 .v-application .nav-header.v-app-bar,
-.v-application .nav-header.black {
+.v-application .nav-header.black,
+.v-application .nav-header-inner.v-toolbar,
+.v-application .nav-header-inner.black {
   background-color: $win-yellow !important;
 }
 .v-application .nav-header {
