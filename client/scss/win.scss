@@ -5,11 +5,13 @@
 // Tokens: WIN-CI/WIN-Wiki docs/design-tokens.md
 // =========================================================
 
-$win-yellow: #EDFB01;  // primary surface, black content only
-$win-purple: #5629D8;  // accent / links
+$win-yellow: #EDFB01;  // primary surface (top nav), black content only
+$win-purple: #5629D8;  // accent: links, sidebar, primary elements
+$win-ink:    #141115;  // near-black text
 
-// Inter @font-face (also present in the fonts-default chunk; declared here so
-// the always-loaded app bundle carries it too).
+// ---------------------------------------------------------
+// Typography -> Inter
+// ---------------------------------------------------------
 @font-face {
   font-family: 'Inter';
   font-style: normal;
@@ -24,8 +26,6 @@ $win-purple: #5629D8;  // accent / links
   font-display: swap;
   src: url('../fonts/default/inter-latin-wght-italic.woff2') format('woff2');
 }
-
-// App-wide UI font -> Inter
 .v-application {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 
@@ -35,11 +35,11 @@ $win-purple: #5629D8;  // accent / links
   }
 }
 
-// Top navigation bar -> WIN neon surface with black content.
-// Specificity must beat Vuetify's baked-in color class `.v-application .black`
-// (0,2,0). These selectors are 0,3,0. Wiki.js nests `.nav-header-inner` (the
-// element that paints the visible toolbar surface) which also carries `.black`,
-// so it must be covered too.
+// ---------------------------------------------------------
+// Top navigation bar -> WIN neon surface, black content.
+// Specificity must beat Vuetify's `.v-application .black` (0,2,0).
+// Wiki.js paints the visible surface on `.nav-header-inner`, so cover both.
+// ---------------------------------------------------------
 .v-application .nav-header.v-app-bar,
 .v-application .nav-header.black,
 .v-application .nav-header-inner.v-toolbar,
@@ -47,24 +47,64 @@ $win-purple: #5629D8;  // accent / links
   background-color: $win-yellow !important;
 }
 .v-application .nav-header {
-  .v-toolbar__content,
   .v-toolbar__title,
   .v-btn,
   .v-btn .v-icon,
-  .v-icon,
-  .v-text-field input,
-  input,
+  > .v-icon,
   a {
     color: #000 !important;
   }
-  .v-text-field input { caret-color: #000 !important; }
+
+  // Search field: white pill with dark text (high contrast on neon).
+  // (Overrides the dark solo-field look that made black-on-dark unreadable.)
+  .v-text-field.v-text-field--solo .v-input__slot {
+    background-color: #fff !important;
+  }
+  .v-text-field input,
+  .v-text-field .v-label,
+  .v-text-field .v-icon {
+    color: $win-ink !important;
+    caret-color: $win-ink !important;
+  }
 }
 
-// Content links -> WIN purple (leave invalid-page red as-is)
+// ---------------------------------------------------------
+// Replace all blue accents with WIN purple.
+// Doubling `.v-application` raises specificity to beat Vuetify's
+// runtime theme utilities (`.v-application .primary`, 0,2,0 !important).
+// ---------------------------------------------------------
+.v-application.v-application .primary {
+  background-color: $win-purple !important;
+  border-color: $win-purple !important;
+}
+.v-application.v-application .primary--text {
+  color: $win-purple !important;
+  caret-color: $win-purple !important;
+}
+// History icon and other indigo accents
+.v-application.v-application .indigo--text {
+  color: $win-purple !important;
+}
+// Sidebar in MIXED nav mode uses hardcoded blue shades
+.v-application.v-application .blue.darken-2,
+.v-application.v-application .blue.darken-3 {
+  background-color: $win-purple !important;
+}
+
+// ---------------------------------------------------------
+// Content: links + headings
+// ---------------------------------------------------------
 .v-main .contents a:not(.is-internal-link.is-invalid-page) {
   color: $win-purple;
-
   &:hover { color: darken($win-purple, 10%); }
+}
+// h1 was hardcoded blue with a blue underline -> ink heading, purple underline
+.v-main .contents h1 {
+  color: $win-ink !important;
+
+  &::after {
+    background: linear-gradient(to right, $win-purple, rgba($win-purple, 0)) !important;
+  }
 }
 
 // Welcome splash primary button -> WIN purple
