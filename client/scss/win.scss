@@ -1,0 +1,68 @@
+// =========================================================
+// WIN CUSTOM THEME OVERRIDES (light mode)
+// Compiled into app.css (the always-loaded main bundle) via
+// an @import at the end of client/scss/app.scss.
+// Tokens: WIN-CI/WIN-Wiki docs/design-tokens.md
+// =========================================================
+
+$win-yellow: #EDFB01;  // primary surface, black content only
+$win-purple: #5629D8;  // accent / links
+
+// Inter @font-face (also present in the fonts-default chunk; declared here so
+// the always-loaded app bundle carries it too).
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/default/inter-latin-wght-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/default/inter-latin-wght-italic.woff2') format('woff2');
+}
+
+// App-wide UI font -> Inter
+.v-application {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+
+  .v-card__title, .v-toolbar__title, .headline, .title,
+  .subtitle-1, .subtitle-2, .body-1, .body-2, .caption, .overline {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  }
+}
+
+// Top navigation bar -> WIN neon surface with black content
+.nav-header {
+  background-color: $win-yellow !important;
+
+  .v-toolbar__content,
+  .v-toolbar__title,
+  .v-btn,
+  .v-icon,
+  .v-text-field input,
+  input,
+  a {
+    color: #000 !important;
+  }
+  .v-text-field input { caret-color: #000 !important; }
+}
+
+// Content links -> WIN purple (leave invalid-page red as-is)
+.v-main .contents a:not(.is-internal-link.is-invalid-page) {
+  color: $win-purple;
+
+  &:hover { color: darken($win-purple, 10%); }
+}
+
+// Welcome splash (shown before a home page exists) -> brand the primary button
+.welcome {
+  .v-btn.primary {
+    background-color: $win-purple !important;
+    border-color: $win-purple !important;
+    color: #fff !important;
+  }
+}
