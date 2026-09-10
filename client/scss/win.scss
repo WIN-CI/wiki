@@ -170,3 +170,22 @@ $win-transition:   .2s cubic-bezier(.4, 0, .2, 1);
   color: #fff !important;
   border-radius: $win-radius-sm !important;
 }
+
+// ---------------------------------------------------------
+// Top-left logo -> official WIN wordmark (client/static/svg/win-logo.svg,
+// extracted from win-ci.de). Forced in CSS so it does not depend on the
+// DB `logoUrl` setting (which still points at the stock external logo).
+// ---------------------------------------------------------
+.v-application .nav-header .org-logo {
+  height: 34px !important;
+  width: 54px !important;
+  max-width: 54px !important;
+  flex: 0 0 54px !important;
+
+  .v-responsive__sizer { display: none !important; }
+  .v-image__image {
+    background-image: url('/_assets/svg/win-logo.svg') !important;
+    background-size: contain !important;
+    background-position: center !important;
+  }
+}
