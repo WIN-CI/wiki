@@ -66,6 +66,11 @@ html {
     .v-toolbar__title, .v-btn, .v-btn .v-icon, > .v-icon, a {
       color: #000 !important;
     }
+    // Stock labels use white--text / grey--text (made for the dark stock bar),
+    // e.g. the editor's Save / Page / Close buttons: ink on neon instead
+    .white--text { color: $win-ink !important; }
+    .grey--text:not(.v-icon) { color: rgba($win-ink, .6) !important; }
+    .v-progress-circular { color: $win-purple !important; }
 
     // Search field: modern white pill, dark text
     .v-text-field.v-text-field--solo .v-input__slot {
