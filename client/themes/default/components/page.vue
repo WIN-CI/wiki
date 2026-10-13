@@ -366,6 +366,7 @@ import { get, sync } from 'vuex-pathify'
 import _ from 'lodash'
 import ClipboardJS from 'clipboard'
 import Vue from 'vue'
+import gql from 'graphql-tag'
 
 /* global siteLangs */
 
@@ -496,6 +497,7 @@ export default {
   data() {
     return {
       locales: siteLangs,
+      crumbTitles: {}, // WIN: page path -> title, for the breadcrumbs
       navShown: false,
       navExpanded: false,
       upBtnShown: false,
@@ -540,11 +542,14 @@ export default {
       }
     },
     breadcrumbs() {
+      // WIN: show page titles instead of path segments (parent titles come from loadCrumbTitles)
+      const segments = this.path.split('/')
       return [{ path: '/', name: 'Home' }].concat(
-        _.reduce(this.path.split('/'), (result, value) => {
+        _.reduce(segments, (result, value, idx) => {
+          const pagePath = segments.slice(0, idx + 1).join('/')
           result.push({
             path: _.get(_.last(result), 'path', this.locales.length > 0 ? `/${this.locale}` : '') + `/${value}`,
-            name: value
+            name: idx === segments.length - 1 ? this.title : (this.crumbTitles[pagePath] || value)
           })
           return result
         }, []))
@@ -606,6 +611,8 @@ export default {
     this.$store.set('page/mode', 'view')
   },
   mounted () {
+    this.loadCrumbTitles()
+
     if (this.$vuetify.theme.dark) {
       this.scrollStyle.bar.background = '#424242'
     }
@@ -652,6 +659,34 @@ export default {
     })
   },
   methods: {
+    // WIN: fetch the titles of the parent pages in one query. Paths the reader can't see
+    // (or that have no page) keep their path segment.
+    async loadCrumbTitles () {
+      const segments = this.path.split('/')
+      const parents = segments.slice(0, -1).map((v, i) => segments.slice(0, i + 1).join('/'))
+      if (parents.length < 1) { return }
+      const fields = parents.map((p, i) => `p${i}: singleByPath(path: $p${i}, locale: $locale) { title }`).join(' ')
+      const vars = parents.map((p, i) => `$p${i}: String!`).join(', ')
+      const variables = { locale: this.locale }
+      parents.forEach((p, i) => { variables[`p${i}`] = p })
+      try {
+        const resp = await this.$apollo.query({
+          query: gql(`query (${vars}, $locale: String!) { pages { ${fields} } }`),
+          variables,
+          errorPolicy: 'all',
+          fetchPolicy: 'cache-first'
+        })
+        const pages = _.get(resp, 'data.pages', {}) || {}
+        const titles = {}
+        parents.forEach((p, i) => {
+          const t = _.get(pages, `p${i}.title`)
+          if (t) { titles[p] = t }
+        })
+        this.crumbTitles = titles
+      } catch (err) {
+        // keep the path segments
+      }
+    },
     goHome () {
       if (this.locales && this.locales.length > 0) {
         window.location.assign(`/${this.locale}/home`)
