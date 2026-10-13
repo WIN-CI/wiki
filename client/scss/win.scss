@@ -10,6 +10,9 @@
 $win-yellow: #EDFB01;  // brand neon - top nav surface, black content only
 $win-purple: #5629D8;  // brand purple - sidebar, accents, links
 $win-ink:    #141115;  // near-black text
+$win-cream:  #F2EAE6;  // warm neutral surface (page chrome, callouts)
+$win-taupe:  #DED5D0;  // hairlines / muted surface
+$win-lilac:  #BCB6FF;  // light purple (tags, subtle highlights)
 
 // Modern component treatment (colors untouched)
 $win-radius:     12px;
@@ -32,160 +35,643 @@ $win-transition:   .2s cubic-bezier(.4, 0, .2, 1);
   font-style: italic; font-weight: 100 900; font-display: swap;
   src: url('../fonts/default/inter-latin-wght-italic.woff2') format('woff2');
 }
-.v-application {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-
-  .v-card__title, .v-toolbar__title, .headline, .title,
-  .subtitle-1, .subtitle-2, .body-1, .body-2, .caption, .overline {
+// ---------------------------------------------------------
+// Specificity guard: app.css (this file) loads BEFORE vendor.css (Vuetify)
+// and theme0.css (stock theme), so on equal specificity the stock rules
+// win. Nesting every WIN rule under `html` adds one type selector, which
+// breaks those ties in our favor without !important wars.
+// ---------------------------------------------------------
+html {
+  .v-application {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  }
-}
 
-// ---------------------------------------------------------
-// Top navigation bar -> WIN neon, black content, soft separation shadow
-// ---------------------------------------------------------
-.v-application .nav-header.v-app-bar,
-.v-application .nav-header.black,
-.v-application .nav-header-inner.v-toolbar,
-.v-application .nav-header-inner.black {
-  background-color: $win-yellow !important;
-}
-.v-application .nav-header {
-  box-shadow: 0 2px 12px rgba(20, 17, 21, .12) !important;
-
-  .v-toolbar__title, .v-btn, .v-btn .v-icon, > .v-icon, a {
-    color: #000 !important;
-  }
-
-  // Search field: modern white pill, dark text
-  .v-text-field.v-text-field--solo .v-input__slot {
-    background-color: #fff !important;
-    border-radius: $win-radius-pill !important;
-    box-shadow: none !important;
-  }
-  .v-text-field input,
-  .v-text-field .v-label,
-  .v-text-field .v-icon {
-    color: $win-ink !important;
-    caret-color: $win-ink !important;
-  }
-}
-
-// ---------------------------------------------------------
-// Blue accents -> WIN purple
-// ---------------------------------------------------------
-.v-application.v-application .primary {
-  background-color: $win-purple !important;
-  border-color: $win-purple !important;
-}
-.v-application.v-application .primary--text {
-  color: $win-purple !important;
-  caret-color: $win-purple !important;
-}
-.v-application.v-application .indigo--text { color: $win-purple !important; }
-.v-application.v-application .blue.darken-2,
-.v-application.v-application .blue.darken-3 { background-color: $win-purple !important; }
-
-// ---------------------------------------------------------
-// MODERN COMPONENTS (rounded corners + soft shadows, no hard borders)
-// ---------------------------------------------------------
-.v-application {
-  // Elevated surfaces: cards, menus, dialogs, dropdowns
-  .v-card,
-  .v-menu__content,
-  .v-dialog > .v-card,
-  .v-autocomplete__content,
-  .v-list.v-select-list,
-  .v-sheet.v-list {
-    border-radius: $win-radius !important;
-  }
-  .v-card:not(.v-card--flat):not(.nav-header):not(.nav-header-inner) {
-    box-shadow: $win-shadow !important;
-  }
-  .v-menu__content { box-shadow: $win-shadow-hover !important; }
-
-  // Buttons: rounder, smooth hover
-  .v-btn:not(.v-btn--round):not(.v-btn--icon):not(.v-btn--fab) {
-    border-radius: $win-radius-sm !important;
-    text-transform: none;
-    letter-spacing: .01em;
-    transition: box-shadow $win-transition, transform $win-transition, background-color $win-transition;
-  }
-  .v-btn.v-btn--has-bg:hover { box-shadow: $win-shadow-hover !important; }
-}
-
-// Comments panel -> WIN palette + modern card
-.comments-container {
-  border-radius: $win-radius !important;
-  overflow: hidden;
-  box-shadow: $win-shadow !important;
-}
-.comments-header {
-  background-color: $win-purple !important;
-  color: #fff !important;
-}
-.comments-main { background-color: #f6f6f7 !important; }
-
-// ---------------------------------------------------------
-// Content: links, headings, and modernized content blocks
-// ---------------------------------------------------------
-.v-main .contents {
-  a:not(.is-internal-link.is-invalid-page) {
-    color: $win-purple;
-    &:hover { color: darken($win-purple, 10%); }
-  }
-
-  h1 {
-    color: $win-ink !important;
-    &::after {
-      background: linear-gradient(to right, $win-purple, rgba($win-purple, 0)) !important;
+    .v-card__title, .v-toolbar__title, .headline, .title,
+    .subtitle-1, .subtitle-2, .body-1, .body-2, .caption, .overline {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
   }
 
-  // Softer, rounder content blocks
-  table {
-    border: none !important;
+  // ---------------------------------------------------------
+  // Top navigation bar -> WIN neon, black content, soft separation shadow
+  // ---------------------------------------------------------
+  .v-application .nav-header.v-app-bar,
+  .v-application .nav-header.black,
+  .v-application .nav-header-inner.v-toolbar,
+  .v-application .nav-header-inner.black {
+    background-color: $win-yellow !important;
+  }
+  .v-application .nav-header {
+    box-shadow: 0 2px 12px rgba(20, 17, 21, .12) !important;
+
+    .v-toolbar__title, .v-btn, .v-btn .v-icon, > .v-icon, a {
+      color: #000 !important;
+    }
+
+    // Search field: modern white pill, dark text
+    .v-text-field.v-text-field--solo .v-input__slot {
+      background-color: #fff !important;
+      border-radius: $win-radius-pill !important;
+      box-shadow: none !important;
+    }
+    .v-text-field input,
+    .v-text-field .v-label,
+    .v-text-field .v-icon {
+      color: $win-ink !important;
+      caret-color: $win-ink !important;
+    }
+  }
+
+  // ---------------------------------------------------------
+  // Blue accents -> WIN purple
+  // ---------------------------------------------------------
+  .v-application.v-application .primary {
+    background-color: $win-purple !important;
+    border-color: $win-purple !important;
+  }
+  // ...except the navigation list, which is white since win.12
+  .v-application.v-application .v-navigation-drawer .v-list.primary {
+    background-color: #fff !important;
+    border-color: transparent !important;
+  }
+  .v-application.v-application .primary--text {
+    color: $win-purple !important;
+    caret-color: $win-purple !important;
+  }
+  .v-application.v-application .indigo--text { color: $win-purple !important; }
+  .v-application.v-application .blue.darken-2,
+  .v-application.v-application .blue.darken-3 { background-color: $win-purple !important; }
+
+  // ---------------------------------------------------------
+  // MODERN COMPONENTS (rounded corners; flat surfaces with CI hairlines)
+  // win.9: WIN CI is flat - hairline dividers, no drop shadows on in-page
+  // surfaces. Shadows remain only on floating layers (menus, dialogs).
+  // ---------------------------------------------------------
+  .v-application {
+    // Elevated surfaces: cards, menus, dialogs, dropdowns
+    .v-card,
+    .v-menu__content,
+    .v-dialog > .v-card,
+    .v-autocomplete__content,
+    .v-list.v-select-list,
+    .v-sheet.v-list {
+      border-radius: $win-radius !important;
+    }
+    .v-card:not(.v-card--flat):not(.nav-header):not(.nav-header-inner) {
+      box-shadow: none !important;
+      border: 1px solid $win-taupe;
+    }
+    .v-dialog > .v-card { border: none; box-shadow: $win-shadow-hover !important; }
+    .v-menu__content { box-shadow: $win-shadow-hover !important; }
+
+    // Buttons: pill shape as on win-ci.de, smooth hover
+    .v-btn:not(.v-btn--round):not(.v-btn--icon):not(.v-btn--fab):not(.v-btn--tile) {
+      border-radius: $win-radius-pill !important;
+      text-transform: none;
+      letter-spacing: .01em;
+      transition: box-shadow $win-transition, transform $win-transition, background-color $win-transition;
+    }
+    .v-btn.v-btn--has-bg:not(.v-btn--fab):hover { box-shadow: none !important; }
+  }
+
+  // Comments panel -> WIN palette, flat card
+  .comments-container {
     border-radius: $win-radius !important;
     overflow: hidden;
-    box-shadow: $win-shadow;
+    box-shadow: none !important;
+    border: 1px solid $win-taupe;
   }
-  blockquote { border-radius: $win-radius !important; }
-  .prismjs { border-radius: $win-radius !important; }
-  details { border-radius: $win-radius !important; }
-  code:not([class^="language-"]) { border-radius: 6px; }
-
-  ul.links-list li {
-    border-radius: $win-radius !important;
-    box-shadow: $win-shadow;
-    border-left-width: 4px;
-    transition: box-shadow $win-transition, transform $win-transition;
-    &:hover { box-shadow: $win-shadow-hover; transform: translateY(-1px); }
+  .comments-header {
+    background-color: $win-purple !important;
+    color: #fff !important;
   }
-}
+  .comments-main { background-color: $win-cream !important; }
 
-// Welcome splash primary button
-.welcome .v-btn.primary {
-  background-color: $win-purple !important;
-  border-color: $win-purple !important;
-  color: #fff !important;
-  border-radius: $win-radius-sm !important;
-}
+  // ---------------------------------------------------------
+  // Content: minimal document typography (win.14, Notion/Slab principles):
+  // ink headings without rules, generous rhythm, quiet lists and tables.
+  // Purple is reserved for links and the active navigation item.
+  // ---------------------------------------------------------
+  .v-main .contents {
+    color: $win-ink;
+    font-size: 16px;
+    line-height: 1.65;
 
-// ---------------------------------------------------------
-// Top-left logo -> official WIN wordmark (client/static/svg/win-logo.svg,
-// extracted from win-ci.de). Forced in CSS so it does not depend on the
-// DB `logoUrl` setting (which still points at the stock external logo).
-// ---------------------------------------------------------
-.v-application .nav-header .org-logo {
-  height: 34px !important;
-  width: 54px !important;
-  max-width: 54px !important;
-  flex: 0 0 54px !important;
+    p { margin-bottom: .75rem; }
 
-  .v-responsive__sizer { display: none !important; }
-  .v-image__image {
-    background-image: url('../static/svg/win-logo.svg') !important;
-    background-size: contain !important;
-    background-position: center !important;
+    a:not(.is-internal-link.is-invalid-page) {
+      color: $win-purple;
+      text-decoration: underline;
+      text-decoration-color: rgba($win-purple, .35);
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+      transition: text-decoration-color $win-transition;
+      &:hover { text-decoration-color: $win-purple; }
+    }
+
+    h1, h2, h3, h4 {
+      color: $win-ink !important;
+      letter-spacing: -.02em;
+      &::after { display: none !important; }
+    }
+    h1 { font-size: 30px; font-weight: 700; margin: 2.5rem 0 .5rem; }
+    h2 { font-size: 23px; font-weight: 650; margin: 2.25rem 0 .5rem; letter-spacing: -.015em; }
+    h3 { font-size: 18px; font-weight: 600; margin: 1.75rem 0 .25rem; }
+    h4 { font-size: 16px; font-weight: 600; margin: 1.5rem 0 .25rem; }
+    > div > h1:first-child, > div > h2:first-child { margin-top: 0; }
+
+    // Lists: small dots instead of stock triangles
+    ul:not(.tabset-tabs):not(.contains-task-list) > li::before {
+      content: '' !important;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: rgba($win-ink, .45);
+      left: -1rem;
+      top: .7em;
+    }
+    ol, ul { margin-bottom: .75rem; }
+    li { margin-bottom: .2rem; }
+
+    // Tables: hairlines only, plain header (no fills, no zebra)
+    table {
+      border: 0 !important;
+      border-radius: 0 !important;
+      border-collapse: collapse !important;
+      box-shadow: none !important;
+      margin: .5rem 0 1.25rem;
+
+      th {
+        background: transparent !important;
+        color: rgba($win-ink, .6) !important;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: left !important;
+        border: 0 !important;
+        border-bottom: 1px solid rgba($win-ink, .12) !important;
+        padding: 8px 12px 8px 0 !important;
+      }
+      td {
+        background: transparent !important;
+        border: 0 !important;
+        border-bottom: 1px solid rgba($win-ink, .07) !important;
+        padding: 10px 12px 10px 0 !important;
+      }
+      tr:nth-child(even) td { background: transparent !important; }
+    }
+
+    // Default quote -> cream callout with purple bar. Semantic callouts
+    // (.is-info/.is-success/.is-warning/.is-danger) keep their stock colors.
+    blockquote { border-radius: $win-radius !important; }
+    blockquote:not(.is-info):not(.is-success):not(.is-warning):not(.is-danger) {
+      background-color: rgba($win-cream, .7) !important;
+      border: 0 !important;
+      border-radius: $win-radius-sm !important;
+      padding: 14px 18px !important;
+      margin: 1rem 0 !important;
+      color: $win-ink;
+      &::before { display: none !important; }
+      // stock adds 16px padding-top to quote paragraphs -> text sat low
+      > p { margin: 0 !important; padding: 0 !important; }
+      > p + p { margin-top: .5rem !important; }
+    }
+
+    .prismjs { border-radius: $win-radius !important; }
+    details { border-radius: $win-radius !important; }
+    code:not([class^="language-"]) { border-radius: 6px; }
+
+    // Link lists ({.links-list}): Notion-style link rows - hairline box,
+    // ink title, muted description, Lucide arrow (external: up-right).
+    ul.links-list {
+      padding-left: 0 !important;
+      li {
+        background: #fff !important;
+        border: 1px solid rgba($win-ink, .1) !important;
+        border-radius: $win-radius-sm !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 0 8px !important;
+        transition: background-color $win-transition, border-color $win-transition;
+        &::before { display: none !important; }
+        &:hover {
+          background: rgba($win-cream, .55) !important;
+          border-color: rgba($win-ink, .18) !important;
+        }
+        > a {
+          display: block;
+          position: relative;
+          margin: 0 !important;
+          padding: 14px 48px 14px 16px !important;
+          color: $win-ink !important;
+          font-weight: 600;
+          text-decoration: none !important;
+          em {
+            display: block;
+            margin: 2px 0 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba($win-ink, .6);
+          }
+          &::after {
+            content: '' !important;
+            position: absolute;
+            top: 17px;
+            right: 16px;
+            width: 16px;
+            height: 16px;
+            margin: 0 !important;
+            background-color: rgba($win-ink, .4);
+            -webkit-mask: var(--win-icon-internal) center / contain no-repeat;
+            mask: var(--win-icon-internal) center / contain no-repeat;
+          }
+          &.is-external-link::after {
+            -webkit-mask-image: var(--win-icon-external);
+            mask-image: var(--win-icon-external);
+          }
+        }
+        &:hover > a::after { background-color: $win-purple; }
+      }
+    }
   }
+
+  // Welcome splash primary button
+  .welcome .v-btn.primary {
+    background-color: $win-purple !important;
+    border-color: $win-purple !important;
+    color: #fff !important;
+    border-radius: $win-radius-sm !important;
+  }
+
+  // ---------------------------------------------------------
+  // Top-left logo -> official WIN wordmark (client/static/svg/win-logo.svg,
+  // extracted from win-ci.de). Forced in CSS so it does not depend on the
+  // DB `logoUrl` setting (which still points at the stock external logo).
+  // ---------------------------------------------------------
+  // The stock header wraps the logo in a 34x34 v-avatar with overflow:hidden,
+  // which clipped both sides of the 54px-wide wordmark (win.8-win.9). Size the
+  // frame to the wordmark instead of squeezing the image.
+  .v-application .nav-header .nav-header-inner .v-toolbar__content > .v-avatar {
+    width: 54px !important;
+    min-width: 54px !important;
+    height: 34px !important;
+    overflow: visible !important;
+    cursor: pointer;
+  }
+  // Consistent 12px logo-to-title gap (stock drops to 4px on small screens)
+  .v-application .nav-header .nav-header-inner .v-toolbar__title {
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+  }
+  // Icon dividers: stock dark-theme white lines -> subtle ink hairlines on neon
+  .v-application .nav-header .v-divider--vertical {
+    border-color: rgba(#000, .12) !important;
+  }
+  // Vuetify paints a blurred placeholder layer under every v-img; on the logo
+  // it shows as a soft halo around the crisp SVG.
+  .org-logo .v-image__image--preload,
+  .login-logo .v-image__image--preload {
+    display: none !important;
+  }
+  .v-application .nav-header .org-logo {
+    position: static !important;
+    height: 34px !important;
+    width: 54px !important;
+    max-width: 54px !important;
+    flex: 0 0 54px !important;
+
+    .v-responsive__sizer { display: none !important; }
+    .v-image__image {
+      background-image: url('../static/svg/win-logo.svg') !important;
+      background-size: contain !important;
+      background-position: center !important;
+    }
+  }
+
+  // =========================================================
+  // win.9 - CI pass: replace remaining stock Wiki.js surfaces
+  // (grey chrome, teal tags, blue footer link, navy splash pages,
+  // stock login) with the WIN palette.
+  // =========================================================
+
+  // ---------------------------------------------------------
+  // win.12 LAYOUT - clear structure (replaces the win.9 cream bands).
+  // One loud surface (neon top bar); everything else white with taupe
+  // hairlines. Three columns on desktop: navigation | content | page info.
+  // ---------------------------------------------------------
+  .v-application.theme--light {
+    // One page header on white: breadcrumb above a large title.
+    // Stock: grey breadcrumb toolbar + grey title band + full-width dividers.
+    .v-main .v-toolbar.grey.lighten-3,
+    .v-main .container.grey.lighten-4,
+    .page-header-section,
+    .page-col-content.is-page-header {
+      background-color: #fff !important;
+      border: 0 !important;
+    }
+    .v-main .v-main__wrap > .v-divider { display: none !important; }
+    .v-main .v-toolbar.grey.lighten-3 .v-toolbar__content { padding-left: 20px !important; }
+    .breadcrumbs-nav { padding-left: 4px !important; }
+    .page-header-section {
+      height: auto !important;
+      padding: 8px 0 12px !important;
+    }
+    // Home has no breadcrumb bar: give the title the same air from the top
+    .v-main__wrap:not(:has(.breadcrumbs-nav)) .page-header-section {
+      padding-top: 36px !important;
+    }
+    .page-col-content.is-page-header { padding-left: 20px !important; }
+
+    .page-header-headings {
+      .headline {
+        color: $win-ink !important;
+        font-size: 40px !important;
+        line-height: 1.15 !important;
+        font-weight: 700 !important;
+        letter-spacing: -.03em !important;
+      }
+      .caption {
+        color: rgba($win-ink, .6) !important;
+        font-size: 15px !important;
+        margin-top: 6px;
+      }
+    }
+    .breadcrumbs-nav {
+      a, .v-breadcrumbs__item, .v-icon { color: rgba($win-ink, .5) !important; font-size: 13px !important; }
+      .v-icon { font-size: 16px !important; }
+    }
+    .page-edit-shortcuts .v-btn {
+      border-color: $win-taupe !important;
+      color: $win-ink !important;
+    }
+
+    // Comfortable reading width for page text
+    .v-main .contents { max-width: 780px; }
+
+    // Page info column (contents, tags, author, share): unboxed, one hairline.
+    .page-col-sd {
+      .overline {
+        color: rgba($win-ink, .5) !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        letter-spacing: .06em !important;
+        padding: 0 0 6px 0 !important;
+      }
+      // one left edge (16px) for every block in the column
+      .page-toc-card > .overline { padding-left: 16px !important; }
+      .page-shortcuts-card {
+        .v-toolbar__content { padding-left: 0 !important; margin-left: 4px; }
+        .spacer:first-child { display: none; }
+        .v-icon { color: rgba($win-ink, .5) !important; }
+      }
+      .page-toc-card {
+        .v-list { padding: 0 !important; background: transparent !important; }
+        .v-list-item {
+          min-height: 28px !important;
+          padding: 0 0 0 16px !important;
+          border-radius: 0;
+          &::before { display: none; }
+          .v-icon { display: none; }
+          .v-list-item__title {
+            font-size: 13px !important;
+            font-weight: 400 !important;
+            color: rgba($win-ink, .6) !important;
+          }
+          &:hover .v-list-item__title { color: $win-ink !important; }
+        }
+        .v-list-item .v-list-item__title { padding-left: 0 !important; }
+        .v-list-item .v-list-item__title.pl-4, .v-list-item .pl-4 { padding-left: 12px !important; }
+      }
+      .page-author-card, .page-tags-card {
+        .pa-5, .pa-4 { padding: 0 16px !important; }
+      }
+      // even 28px rhythm between the column's blocks (margin on .v-card above)
+      .page-toc-card > .overline { padding-top: 0 !important; }
+      .page-toc-card .v-list { padding-bottom: 0 !important; }
+      .page-author-card .v-icon { color: rgba($win-ink, .5) !important; }
+      .page-author-card .body-2 { font-size: 13px !important; }
+      .v-card,
+      .v-card.grey {
+        background-color: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin-bottom: 28px !important;
+      }
+      .page-shortcuts-card .v-toolbar {
+        background-color: transparent !important;
+        border: 0 !important;
+      }
+      .v-list-item__title { color: $win-ink; }
+    }
+
+    // Desktop: page info moves to the right of the content (docs pattern),
+    // so navigation and text sit next to each other.
+    @media (min-width: 1264px) {
+      .page-col-content.is-page-header {
+        margin-left: 0 !important;
+        flex: 0 0 75% !important;
+        max-width: 75% !important;
+      }
+      .page-col-content:not(.is-page-header) { order: 1 !important; }
+      .page-col-sd {
+        border-left: 1px solid $win-taupe;
+        order: 3 !important;
+        margin-top: -128px !important;
+        padding-top: 20px !important;
+      }
+    }
+
+    // Tags: lilac chips with ink text instead of stock teal
+    .v-chip.teal.lighten-5 {
+      background-color: rgba($win-ink, .06) !important;
+      border-color: transparent !important;
+      border-radius: 6px !important;
+      height: 26px !important;
+      font-size: 12px !important;
+      padding: 0 8px !important;
+      .v-icon { color: rgba($win-ink, .5) !important; font-size: 14px !important; }
+      span { color: rgba($win-ink, .8) !important; caret-color: $win-ink !important; }
+      &:hover { background-color: rgba($win-ink, .1) !important; }
+    }
+    .teal--text { color: $win-purple !important; caret-color: $win-purple !important; }
+    .blue-grey--text.text--darken-2 { color: $win-purple !important; }
+    .v-btn.blue-grey.darken-2 { background-color: $win-purple !important; }
+
+    // Footer
+    .v-footer {
+      background-color: #fff !important;
+      border-top: 1px solid $win-taupe;
+      .caption { color: rgba($win-ink, .65) !important; }
+      a { color: $win-purple !important; }
+    }
+
+    // Navigation (win.14, Notion-like): warm off-white panel, compact 32px
+    // rows, small muted icons, neutral hover; purple only on the active page.
+    .v-navigation-drawer.primary {
+      background-color: mix($win-cream, #fff, 45%) !important;
+      border-right: 1px solid rgba($win-ink, .06) !important;
+
+      .v-list.primary { background-color: transparent !important; }
+      .v-navigation-drawer__border { display: none; }
+      .__bar-is-vertical { background: rgba($win-ink, .15) !important; }
+      .v-list { padding-top: 10px !important; }
+      .v-list-item,
+      .v-list-item__title {
+        color: rgba($win-ink, .82) !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0 !important;
+      }
+      .v-list-item__icon {
+        margin: 0 10px 0 0 !important;
+        align-self: center !important;
+        min-width: 0 !important;
+      }
+      .v-icon { color: rgba($win-ink, .5) !important; font-size: 18px !important; }
+      .v-subheader {
+        color: rgba($win-ink, .45) !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+        height: 28px !important;
+        padding: 0 18px !important;
+        margin-top: 14px;
+      }
+      .v-divider { display: none !important; }
+      .v-list-item {
+        min-height: 32px !important;
+        height: 32px;
+        padding: 0 8px !important;
+        margin: 1px 10px;
+        border-radius: 6px;
+        &:hover { background-color: rgba($win-ink, .05) !important; }
+        &::before { opacity: 0 !important; }
+      }
+      .v-list-item--active {
+        background-color: rgba($win-ink, .07) !important;
+        .v-list-item__title { color: $win-ink !important; font-weight: 600 !important; }
+        .v-icon { color: $win-purple !important; }
+      }
+    }
+
+    // Edit FAB: neon accent (CI "Schedule a call" pill). Desktop has the same
+    // actions in the header, so the floating button is mobile-only (Notion has
+    // no floating chrome).
+    @media (min-width: 1264px) {
+      .page-col-content .v-speed-dial, .v-speed-dial--fixed { display: none !important; }
+    }
+    // "Back to top" (stock: neon FAB fixed bottom-left, on the sidebar edge)
+    // -> quiet white circle bottom-right.
+    .v-application--wrap > .v-btn--fab.v-btn--fixed.v-btn--left.primary {
+      left: auto !important;
+      right: 24px !important;
+      bottom: 24px !important;
+      width: 40px !important;
+      height: 40px !important;
+      background-color: #fff !important;
+      border: 1px solid rgba($win-ink, .12) !important;
+      box-shadow: 0 2px 8px rgba($win-ink, .08) !important;
+      .v-icon { color: rgba($win-ink, .7) !important; font-size: 20px !important; }
+    }
+    .v-btn--fab.primary {
+      background-color: $win-yellow !important;
+      border-color: $win-yellow !important;
+      .v-icon { color: #000 !important; }
+    }
+  }
+
+  // Admin area header subtitle: grey on neon is unreadable -> ink
+  .v-application .nav-header .overline.grey--text { color: rgba(#000, .7) !important; }
+
+  // Search results overlay: neutral highlight instead of orange/blue gradients
+  .search-results-items .highlighted { background: $win-lilac !important; }
+  .search-results-suggestions .highlighted { background: $win-purple !important; }
+
+  // ---------------------------------------------------------
+  // Splash pages (page not found / create page, unauthorized):
+  // WIN neon instead of the stock navy->purple gradient.
+  // ---------------------------------------------------------
+  .newpage,
+  .unauthorized {
+    background: $win-yellow !important;
+    color: #000 !important;
+
+    // Stock decorative layers (circuit motif + dark overlay) muddy the neon
+    &::before, &::after { display: none !important; }
+
+    .headline, .subtitle-1, .subtitle-2 { color: #000 !important; }
+    img { filter: grayscale(1) invert(1); opacity: .9; }
+    .v-btn.v-btn--contained { background-color: #000 !important; color: #fff !important; }
+    // Stock outlined buttons carry purple/pink text classes (unreadable on
+    // neon); force ink on the button, its label and its icon.
+    .v-btn.v-btn--outlined,
+    .v-btn.v-btn--outlined .v-btn__content,
+    .v-btn.v-btn--outlined .v-icon {
+      color: #000 !important;
+      caret-color: #000 !important;
+      border-color: #000 !important;
+    }
+  }
+
+  // ---------------------------------------------------------
+  // Login: WIN neon background (replaces stock photo + Wiki.js mark),
+  // solid white panel, WIN wordmark, purple primary action.
+  // ---------------------------------------------------------
+  .login {
+    background-image: none !important;
+    background-color: $win-yellow !important;
+
+    &-sd {
+      background-color: #fff !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+    }
+    &-logo {
+      background-color: $win-yellow !important;
+      // Full wordmark, centered in the tab (stock: 34px square, top-left padded)
+      width: 82px !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      .v-avatar {
+        width: 54px !important;
+        min-width: 54px !important;
+        height: 34px !important;
+      }
+      .v-responsive__sizer { display: none !important; }
+      .v-image__image {
+        background-image: url('../static/svg/win-logo.svg') !important;
+        background-size: contain !important;
+      }
+    }
+    &-title .text-h6 { color: $win-ink !important; font-weight: 700; }
+    &-subtitle {
+      background-image: none !important;
+      border-bottom: 1px solid $win-taupe !important;
+      text-shadow: none !important;
+      color: $win-ink !important;
+    }
+    &-form, &-list { border-top: none !important; }
+    .v-text-field--solo .v-input__slot {
+      border: 1px solid $win-taupe;
+      border-radius: $win-radius-sm !important;
+    }
+    .v-btn.blue.darken-2,
+    .v-btn.primary {
+      background-color: $win-purple !important;
+      border-color: $win-purple !important;
+      color: #fff !important;
+    }
+    .caption a, a.caption { color: $win-purple !important; }
+    // Focused field icon: stock blue -> WIN purple
+    .v-input--is-focused .v-icon,
+    .blue--text { color: $win-purple !important; caret-color: $win-purple !important; }
+  }
+  @import 'win-icons';
 }
