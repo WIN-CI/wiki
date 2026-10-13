@@ -366,7 +366,6 @@ import { get, sync } from 'vuex-pathify'
 import _ from 'lodash'
 import ClipboardJS from 'clipboard'
 import Vue from 'vue'
-import gql from 'graphql-tag'
 
 /* global siteLangs */
 
@@ -670,12 +669,14 @@ export default {
       const variables = { locale: this.locale }
       parents.forEach((p, i) => { variables[`p${i}`] = p })
       try {
-        const resp = await this.$apollo.query({
-          query: gql(`query (${vars}, $locale: String!) { pages { ${fields} } }`),
-          variables,
-          errorPolicy: 'all',
-          fetchPolicy: 'cache-first'
-        })
+        // plain fetch: the build compiles gql`` templates at build time, so a query built
+        // at runtime can't go through graphql-tag. Same-origin, so the login cookie applies.
+        const resp = await fetch('/graphql', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: `query (${vars}, $locale: String!) { pages { ${fields} } }`, variables })
+        }).then(r => r.json())
         const pages = _.get(resp, 'data.pages', {}) || {}
         const titles = {}
         parents.forEach((p, i) => {
