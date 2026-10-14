@@ -96,10 +96,25 @@
                   href='/wintranet/'
                   aria-label='WINtranet'
                   )
-                  v-icon(:left='$vuetify.breakpoint.mdAndUp', color='grey') mdi-view-compact-outline
-                  span(v-if='$vuetify.breakpoint.mdAndUp') WINtranet
+                  template(v-if='$vuetify.breakpoint.mdAndUp')
+                    span WINtranet
+                    v-icon(right, color='grey') mdi-arrow-top-right
+                  v-icon(v-else, color='grey') mdi-view-compact-outline
               span Zum WINtranet-Dashboard
             v-divider(vertical)
+
+          //- LIGHT / DARK (WIN: same choice as the WINtranet, localStorage wt-theme)
+
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on }')
+              v-btn(
+                icon
+                v-on='on'
+                @click='winToggleTheme'
+                :aria-label='$vuetify.theme.dark ? `Zum hellen Modus wechseln` : `Zum dunklen Modus wechseln`'
+                )
+                v-icon(color='grey') {{ $vuetify.theme.dark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}
+            span {{ $vuetify.theme.dark ? 'Zum hellen Modus wechseln' : 'Zum dunklen Modus wechseln' }}
 
           //- (mobile) SEARCH TOGGLE
 
@@ -221,15 +236,14 @@
                     height='64'
                     :aria-label='$t(`common:header.account`)'
                     )
-                    v-icon(v-if='picture.kind === `initials`', color='grey') mdi-account-circle
-                    v-avatar(v-else-if='picture.kind === `image`', :size='34')
+                    span.win-avatar(v-if='picture.kind === `initials`') {{picture.initials}}
+                    v-avatar(v-else-if='picture.kind === `image`', :size='32')
                       v-img(:src='picture.url')
                 span {{$t('common:header.account')}}
             v-list(nav)
               v-list-item.py-3.grey(:class='$vuetify.theme.dark ? `darken-4-l5` : `lighten-5`')
                 v-list-item-avatar
-                  v-avatar.blue(v-if='picture.kind === `initials`', :size='40')
-                    span.white--text.subheading {{picture.initials}}
+                  span.win-avatar.win-avatar--lg(v-if='picture.kind === `initials`') {{picture.initials}}
                   v-avatar(v-else-if='picture.kind === `image`', :size='40')
                     v-img(:src='picture.url')
                 v-list-item-content
@@ -390,6 +404,12 @@ export default {
     this.isDevMode = siteConfig.devMode === true
   },
   methods: {
+    winToggleTheme () {
+      const theme = this.$vuetify.theme.dark ? 'light' : 'dark'
+      this.$vuetify.theme.dark = (theme === 'dark')
+      document.documentElement.setAttribute('data-theme', theme)
+      try { window.localStorage.setItem('wt-theme', theme) } catch (err) { /* storage blocked */ }
+    },
     searchFocus () {
       this.searchIsFocused = true
     },

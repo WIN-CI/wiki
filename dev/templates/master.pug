@@ -27,6 +27,10 @@ html(lang=siteConfig.lang)
     link(rel='mask-icon', href='/_assets/favicons/safari-pinned-tab.svg?v=win11', color='#000000')
     link(rel='manifest', href='/_assets/manifest.json')
 
+    //- WIN: remembered light/dark choice before the first paint (shared with the WINtranet)
+    script.
+      try { var winT = localStorage.getItem('wt-theme'); if (winT === 'dark' || winT === 'light') document.documentElement.setAttribute('data-theme', winT) } catch (e) {}
+
     //- Site Properties
     script.
       var siteConfig = !{JSON.stringify(siteConfig)}

@@ -196,9 +196,22 @@ let bootstrap = () => {
 
   const i18n = localization.init()
 
+  // WIN: light / dark like the WINtranet. Order: the header toggle's choice
+  // (localStorage "wt-theme", shared with the WINtranet), then the profile
+  // setting, then the system. <html data-theme> drives the WIN tokens (win.scss).
+  const winRoot = document.documentElement
+  const winMq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null
+  let winStored = null
+  try { winStored = window.localStorage.getItem('wt-theme') } catch (err) { /* storage blocked */ }
   let darkModeEnabled = siteConfig.darkMode
-  if ((store.get('user/appearance') || '').length > 0) {
+  if (winStored === 'dark' || winStored === 'light') {
+    darkModeEnabled = (winStored === 'dark')
+  } else if ((store.get('user/appearance') || '').length > 0) {
     darkModeEnabled = (store.get('user/appearance') === 'dark')
+    winRoot.setAttribute('data-theme', darkModeEnabled ? 'dark' : 'light')
+  } else {
+    darkModeEnabled = !!(winMq && winMq.matches)
+    winRoot.removeAttribute('data-theme')
   }
 
   window.WIKI = new Vue({
@@ -215,6 +228,13 @@ let bootstrap = () => {
       }
     }),
     mounted () {
+      // WIN: follow system changes while no theme was picked
+      if (winMq) {
+        const winFollow = () => {
+          if (!winRoot.hasAttribute('data-theme')) { this.$vuetify.theme.dark = winMq.matches }
+        }
+        if (winMq.addEventListener) { winMq.addEventListener('change', winFollow) } else { winMq.addListener(winFollow) }
+      }
       this.$moment.locale(siteConfig.lang)
       if ((store.get('user/dateFormat') || '').length > 0) {
         this.$moment.updateLocale(this.$moment.locale(), {
