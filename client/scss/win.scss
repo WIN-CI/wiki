@@ -348,6 +348,7 @@ html {
   // Editor: formatting bar as a quiet muted strip (stock: solid primary bar)
   .v-application.v-application .editor-markdown-toolbar.v-toolbar.v-toolbar.primary {
     background-color: var(--win-muted) !important;
+    background-image: none !important;  // stock paints a blue gradient on top
     border-bottom: 1px solid var(--win-border) !important;
     .v-btn, .v-icon { color: var(--win-fg) !important; }
   }
