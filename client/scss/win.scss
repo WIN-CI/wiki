@@ -224,6 +224,11 @@ html {
     font-size: 12px; font-weight: 600; letter-spacing: .02em;
     &--lg { width: 40px; height: 40px; font-size: 14px; }
   }
+  // Account menu: quiet icons, logout in the r tone
+  .v-menu__content {
+    .v-icon.blue-grey--text, .v-icon.mdi-face-profile { color: var(--win-muted-fg) !important; }
+    .red--text { color: var(--win-r-fg) !important; caret-color: var(--win-r-fg) !important; }
+  }
   // Mobile search row under the bar (stock: deep-purple toolbar)
   .v-application .nav-header .v-toolbar.deep-purple,
   .v-application .nav-header .v-toolbar.deep-purple .v-input__slot {
@@ -892,6 +897,7 @@ html {
   .grey.darken-5 { background-color: var(--win-bg) !important; }
   .v-main .container.grey.darken-4-l3 { background-color: var(--win-bg) !important; }
   .v-navigation-drawer.grey.darken-4-d4 { background-color: var(--win-muted-2) !important; }
+  .v-navigation-drawer .v-list.grey { background-color: transparent !important; }
   .page-col-sd .page-shortcuts-card .v-toolbar { background-color: transparent !important; }
 }
 
