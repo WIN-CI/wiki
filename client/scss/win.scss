@@ -877,6 +877,24 @@ html {
   @import 'win-icons';
 }
 
+// ---------------------------------------------------------
+// Wiki.js' own dark shades (grey darken-N-dX / -lX) are set with
+// `#root .v-application ...` (ID selector), which beats every class-only
+// rule above. Same ID here: darker shades -> page, lighter -> card.
+// ---------------------------------------------------------
+#root .v-application.theme--dark {
+  @each $n in 2, 3, 4 {
+    @for $i from 1 through 5 {
+      .grey.darken-#{$n}-d#{$i} { background-color: var(--win-bg) !important; border-color: var(--win-border) !important; }
+      .grey.darken-#{$n}-l#{$i} { background-color: var(--win-card) !important; border-color: var(--win-border) !important; }
+    }
+  }
+  .grey.darken-5 { background-color: var(--win-bg) !important; }
+  .v-main .container.grey.darken-4-l3 { background-color: var(--win-bg) !important; }
+  .v-navigation-drawer.grey.darken-4-d4 { background-color: var(--win-muted-2) !important; }
+  .page-col-sd .page-shortcuts-card .v-toolbar { background-color: transparent !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
