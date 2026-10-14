@@ -493,7 +493,7 @@ html {
           font-weight: 600;
           text-decoration: none !important;
           em {
-            display: block;
+            display: block !important;
             margin: 2px 0 0 !important;
             padding: 0 !important;
             border: 0 !important;
@@ -628,7 +628,8 @@ html {
       .page-author-card .v-icon { color: var(--win-muted-fg) !important; }
       .page-author-card .body-2 { font-size: 13px !important; color: var(--win-fg) !important; }
       .page-author-card .caption { color: var(--win-muted-fg) !important; }
-      .v-card,
+      // repeated class: beats the generic card rule (border + shadow)
+      .v-card.v-card.v-card.v-card,
       .v-card.grey {
         background-color: transparent !important;
         border: 0 !important;
@@ -636,7 +637,7 @@ html {
         box-shadow: none !important;
         margin-bottom: 28px !important;
       }
-      .page-shortcuts-card .v-toolbar {
+      .page-shortcuts-card .v-toolbar.v-toolbar.v-toolbar.v-toolbar {
         background-color: transparent !important;
         border: 0 !important;
       }
