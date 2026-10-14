@@ -346,7 +346,7 @@ html {
   }
 
   // Editor: formatting bar as a quiet muted strip (stock: solid primary bar)
-  .v-application .editor-markdown-toolbar.v-toolbar.primary {
+  .v-application.v-application .editor-markdown-toolbar.v-toolbar.v-toolbar.primary {
     background-color: var(--win-muted) !important;
     border-bottom: 1px solid var(--win-border) !important;
     .v-btn, .v-icon { color: var(--win-fg) !important; }
