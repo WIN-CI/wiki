@@ -345,6 +345,13 @@ html {
     .v-chip:not(.v-chip--outlined) { border-radius: 999px !important; }
   }
 
+  // Editor: formatting bar as a quiet muted strip (stock: solid primary bar)
+  .v-application .editor-markdown-toolbar.v-toolbar.primary {
+    background-color: var(--win-muted) !important;
+    border-bottom: 1px solid var(--win-border) !important;
+    .v-btn, .v-icon { color: var(--win-fg) !important; }
+  }
+
   // Comments panel: card with a quiet head, no purple block
   .comments-container {
     border-radius: 16px !important;
