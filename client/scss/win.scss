@@ -330,6 +330,15 @@ html {
     margin-left: 12px !important;
     margin-right: 12px !important;
   }
+  // WINtranet link in the header (win.20): quiet text button, not uppercase
+  .v-application .nav-header .win-wintranet-btn {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    padding: 0 16px !important;
+    min-width: 0 !important;
+  }
   // Icon dividers: stock dark-theme white lines -> subtle ink hairlines on neon
   .v-application .nav-header .v-divider--vertical {
     border-color: rgba(#000, .12) !important;

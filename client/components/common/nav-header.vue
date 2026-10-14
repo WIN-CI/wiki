@@ -83,6 +83,24 @@
 
           slot(name='actions')
 
+          //- WINTRANET (WIN: link to the dashboard at /wintranet/, reading mode only)
+
+          template(v-if='mode === `view` && isAuthenticated')
+            v-tooltip(bottom)
+              template(v-slot:activator='{ on }')
+                v-btn.win-wintranet-btn(
+                  text
+                  tile
+                  height='64'
+                  v-on='on'
+                  href='/wintranet/'
+                  aria-label='WINtranet'
+                  )
+                  v-icon(:left='$vuetify.breakpoint.mdAndUp', color='grey') mdi-view-compact-outline
+                  span(v-if='$vuetify.breakpoint.mdAndUp') WINtranet
+              span Zum WINtranet-Dashboard
+            v-divider(vertical)
+
           //- (mobile) SEARCH TOGGLE
 
           v-btn(
