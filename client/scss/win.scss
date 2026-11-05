@@ -766,7 +766,7 @@ html {
     // "Back to top": quiet card circle bottom-right
     .v-application--wrap > .v-btn--fab.v-btn--fixed.v-btn--left {
       left: auto !important;
-      right: 24px !important;
+      right: 84px !important; // the chat overlay sits at 24px
       bottom: 24px !important;
       width: 40px !important;
       height: 40px !important;
@@ -970,3 +970,6 @@ html .v-application .page-selector.page-selector .v-card__actions .v-icon { colo
 html .v-application .page-selector.page-selector .v-treeview-node--active,
 html .v-application .page-selector.page-selector .v-treeview-node__root.v-treeview-node--active { color: var(--win-accent) !important; }
 html .v-application .page-selector.page-selector .v-treeview-node__root::before { background-color: var(--win-accent); }
+
+// win.28: edit button above the chat overlay (the button only shows below 1264px)
+html .v-application .v-speed-dial--fixed { bottom: 84px !important; }

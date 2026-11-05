@@ -72,9 +72,7 @@
       v-card-actions.grey.pa-2(:class='$vuetify.theme.dark ? `darken-2` : `lighten-1`', v-if='!mustExist')
         v-select(
           solo
-          dark
           flat
-          background-color='grey darken-3-d2'
           hide-details
           single-line
           :items='namespaces'
