@@ -176,7 +176,8 @@ module.exports = {
         locale: args.locale,
       });
       if (page) {
-        if (WIKI.auth.checkAccess(context.req.user, ['manage:pages', 'delete:pages'], {
+        // WIN: reading a page needs read rights, not edit rights (WINtranet, chat and knowledge sync)
+        if (WIKI.auth.checkAccess(context.req.user, ['read:pages'], {
           path: page.path,
           locale: page.localeCode
         })) {
