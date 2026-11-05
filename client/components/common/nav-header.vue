@@ -43,7 +43,11 @@
           //-       v-list-item-content
           //-         v-list-item-title.body-2.grey--text.text--ligten-2 {{$t('common:header.imagesFiles')}}
           //-         v-list-item-subtitle.overline.grey--text.text--lighten-2 Coming soon
-          v-toolbar-title(:class='{ "mx-3": $vuetify.breakpoint.mdAndUp, "mx-1": $vuetify.breakpoint.smAndDown }')
+          //- WIN: same links as the WINtranet top bar (signed-in users, reading mode)
+          nav.win-appnav(v-if='mode === `view` && isAuthenticated', aria-label='Bereiche')
+            a.win-appnav__link(href='/wintranet/') WINtranet
+            a.win-appnav__link.is-active(href='/', aria-current='page') Wiki
+          v-toolbar-title(v-else, :class='{ "mx-3": $vuetify.breakpoint.mdAndUp, "mx-1": $vuetify.breakpoint.smAndDown }')
             span.subheading {{title}}
       v-flex(md4, v-if='$vuetify.breakpoint.mdAndUp')
         v-toolbar.nav-header-inner(color='black', dark, flat)
@@ -82,26 +86,6 @@
             v-progress-circular(indeterminate, color='blue', :size='22', :width='2' v-show='isLoading')
 
           slot(name='actions')
-
-          //- WINTRANET (WIN: link to the dashboard at /wintranet/, reading mode only)
-
-          template(v-if='mode === `view` && isAuthenticated')
-            v-tooltip(bottom)
-              template(v-slot:activator='{ on }')
-                v-btn.win-wintranet-btn(
-                  text
-                  tile
-                  height='64'
-                  v-on='on'
-                  href='/wintranet/'
-                  aria-label='WINtranet'
-                  )
-                  template(v-if='$vuetify.breakpoint.mdAndUp')
-                    span WINtranet
-                    v-icon(right, color='grey') mdi-arrow-top-right
-                  v-icon(v-else, color='grey') mdi-view-compact-outline
-              span Zum WINtranet-Dashboard
-            v-divider(vertical)
 
           //- LIGHT / DARK (WIN: same choice as the WINtranet, localStorage wt-theme)
 
@@ -514,11 +498,8 @@ export default {
       window.location.assign('/logout')
     },
     goHome () {
-      if (this.locales && this.locales.length > 0) {
-        window.location.assign(`/${this.locale}/home`)
-      } else {
-        window.location.assign('/')
-      }
+      // WIN: the logo always leads to the WINtranet start page
+      window.location.assign('/wintranet/')
     }
   }
 }

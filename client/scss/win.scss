@@ -188,7 +188,6 @@ html {
       font-size: 14px !important;
       font-weight: 500 !important;
     }
-    .win-wintranet-btn .v-icon { font-size: 16px !important; }
 
     .v-btn.v-btn--icon:has(.win-avatar)::before { border-radius: 50%; }
 
@@ -912,3 +911,62 @@ html {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+// ---------------------------------------------------------
+// win.27: dialogs and app links
+// ---------------------------------------------------------
+// WINtranet | Wiki next to the logo, same as the WINtranet top bar
+html .v-application .nav-header .win-appnav {
+  display: flex; align-items: center; gap: 2px; flex: none;
+  margin-left: 12px; padding-left: 12px;
+  border-left: 1px solid rgba(20, 17, 21, .25);
+}
+html .v-application .nav-header .win-appnav__link {
+  display: inline-flex; align-items: center; height: 36px; padding: 0 10px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; letter-spacing: -.01em; white-space: nowrap;
+  text-decoration: none !important;
+}
+html .v-application .nav-header .win-appnav__link:hover { background: rgba(20, 17, 21, .08); }
+html .v-application .nav-header .win-appnav__link.is-active { font-weight: 600; background: rgba(20, 17, 21, .1); }
+@media (max-width: 640px) {
+  html .v-application .nav-header .win-appnav__link.is-active { display: none; }
+  html .v-application .nav-header .win-appnav { margin-left: 8px; padding-left: 8px; }
+}
+
+// Stock dialogs: blue gradient headers and blue page overlays
+html .v-application .v-overlay .v-overlay__scrim.v-overlay__scrim {
+  background-color: #141115 !important; border-color: #141115 !important;
+}
+html .v-application .v-dialog .dialog-header.dialog-header {
+  background: var(--win-card) !important; color: var(--win-fg) !important;
+  border-bottom: 1px solid var(--win-border); box-shadow: none !important;
+}
+html .v-application .v-dialog .dialog-header.dialog-header .v-icon { color: var(--win-muted-fg) !important; }
+html .v-application .v-dialog .dialog-header.dialog-header .v-progress-circular { color: var(--win-accent) !important; }
+html .v-application .v-dialog .dialog-header.dialog-header.is-red,
+html .v-application .v-dialog .dialog-header.dialog-header.is-red .v-icon { color: var(--win-r-fg) !important; }
+
+// Page location dialog (create, move, select)
+html .v-application .page-selector.page-selector .v-toolbar.v-toolbar {
+  background: var(--win-muted-2) !important; color: var(--win-fg) !important;
+  border-bottom: 1px solid var(--win-border) !important; box-shadow: none !important;
+}
+html .v-application .page-selector.page-selector .v-toolbar.v-toolbar .body-2 { color: var(--win-muted-fg) !important; font-weight: 600; }
+html .v-application .page-selector.page-selector .v-toolbar.v-toolbar .v-icon { color: var(--win-muted-fg) !important; }
+html .v-application .page-selector.page-selector .flex.grey {
+  background-color: var(--win-muted-2) !important; border-right: 1px solid var(--win-border);
+}
+html .v-application .page-selector.page-selector .v-card__actions.grey {
+  background-color: var(--win-muted) !important; border-top: 1px solid var(--win-border);
+}
+html .v-application .page-selector.page-selector .v-card__actions .v-input__slot {
+  background: var(--win-card) !important; color: var(--win-fg) !important;
+  border: 1px solid var(--win-border) !important; box-shadow: none !important;
+}
+html .v-application .page-selector.page-selector .v-card__actions .v-select__selection,
+html .v-application .page-selector.page-selector .v-card__actions input,
+html .v-application .page-selector.page-selector .v-card__actions .v-text-field__prefix,
+html .v-application .page-selector.page-selector .v-card__actions .v-icon { color: var(--win-fg) !important; }
+html .v-application .page-selector.page-selector .v-treeview-node--active,
+html .v-application .page-selector.page-selector .v-treeview-node__root.v-treeview-node--active { color: var(--win-accent) !important; }
+html .v-application .page-selector.page-selector .v-treeview-node__root::before { background-color: var(--win-accent); }
