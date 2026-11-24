@@ -1,7 +1,23 @@
 const _ = require('lodash')
+const moment = require('moment') // WIN: publishing check (win.30)
 const graphHelper = require('../../helpers/graph')
 
 /* global WIKI */
+
+// WIN: same publishing check as the page view in server/controllers/common.js (win.30).
+// A page is live when isPublished is set and now lies inside the optional
+// publishStartDate / publishEndDate window. Anything else only users with
+// write:pages on that page may see.
+function winIsPagePublished (page) {
+  let pageIsPublished = page.isPublished
+  if (pageIsPublished && !_.isEmpty(page.publishStartDate)) {
+    pageIsPublished = moment(page.publishStartDate).isSameOrBefore()
+  }
+  if (pageIsPublished && !_.isEmpty(page.publishEndDate)) {
+    pageIsPublished = moment(page.publishEndDate).isSameOrAfter()
+  }
+  return pageIsPublished
+}
 
 module.exports = {
   Query: {
@@ -81,6 +97,8 @@ module.exports = {
         'title',
         'description',
         'isPublished',
+        'publishStartDate', // WIN: needed for the publishing check, not in PageListItem (win.30)
+        'publishEndDate', // WIN: same
         'isPrivate',
         'privateNS',
         'contentType',
@@ -136,7 +154,13 @@ module.exports = {
         return WIKI.auth.checkAccess(context.req.user, ['read:pages'], {
           path: r.path,
           locale: r.locale
-        })
+        }) && (
+          // WIN: unpublished / scheduled pages only for users with write:pages, as on the page view (win.30)
+          winIsPagePublished(r) || WIKI.auth.checkAccess(context.req.user, ['write:pages'], {
+            path: r.path,
+            locale: r.locale
+          })
+        )
       }).map(r => ({
         ...r,
         tags: _.map(r.tags, 'tag')
@@ -181,6 +205,13 @@ module.exports = {
           path: page.path,
           locale: page.localeCode
         })) {
+          // WIN: unpublished / scheduled pages only for users with write:pages, as on the page view (win.30)
+          if (!winIsPagePublished(page) && !WIKI.auth.checkAccess(context.req.user, ['write:pages'], {
+            path: page.path,
+            locale: page.localeCode
+          })) {
+            throw new WIKI.Error.PageViewForbidden()
+          }
           return {
             ...page,
             locale: page.localeCode,
