@@ -19,6 +19,17 @@ function winIsPagePublished (page) {
   return pageIsPublished
 }
 
+// WIN: the publishing state of pages, for resolvers whose rows don't carry it (win.31).
+// Returns a Map "locale:path" -> true/false. Pages missing from the map count as not live.
+async function winLiveByPath (paths) {
+  const list = _.uniq(_.compact(paths))
+  if (list.length < 1) { return new Map() }
+  const rows = await WIKI.models.pages.query()
+    .select('path', 'localeCode', 'isPublished', 'publishStartDate', 'publishEndDate')
+    .whereIn('path', list)
+  return new Map(rows.map(r => [`${r.localeCode}:${r.path}`, winIsPagePublished(r)]))
+}
+
 module.exports = {
   Query: {
     async pages() { return {} }
@@ -68,15 +79,24 @@ module.exports = {
     async search (obj, args, context) {
       if (WIKI.data.searchEngine) {
         const resp = await WIKI.data.searchEngine.query(args.query, args)
+        // WIN: the PostgreSQL engine indexes drafts and the basic one ignores publish dates, so
+        // results get the same publishing check as list / singleByPath (win.31)
+        const live = await winLiveByPath(_.map(resp.results, 'path'))
+        const results = _.filter(resp.results, r => {
+          const pageArgs = {
+            path: r.path,
+            locale: r.locale,
+            tags: r.tags // Tags are needed since access permissions can be limited by page tags too
+          }
+          return WIKI.auth.checkAccess(context.req.user, ['read:pages'], pageArgs) && (
+            live.get(`${r.locale}:${r.path}`) === true ||
+            WIKI.auth.checkAccess(context.req.user, ['write:pages'], pageArgs)
+          )
+        })
         return {
           ...resp,
-          results: _.filter(resp.results, r => {
-            return WIKI.auth.checkAccess(context.req.user, ['read:pages'], {
-              path: r.path,
-              locale: r.locale,
-              tags: r.tags // Tags are needed since access permissions can be limited by page tags too
-            })
-          })
+          results,
+          totalHits: results.length // WIN: count only what the user gets
         }
       } else {
         return {
@@ -314,12 +334,21 @@ module.exports = {
           }
         }
       }).orderBy([{ column: 'isFolder', order: 'desc' }, 'title'])
+      // WIN: pages that aren't live only for users with write:pages (win.31). A folder whose own
+      // page is a draft stays as a plain folder (no page, path segment as title) for its children.
+      const live = await winLiveByPath(_.map(_.filter(results, 'pageId'), 'path'))
       return results.filter(r => {
         return WIKI.auth.checkAccess(context.req.user, ['read:pages'], {
           path: r.path,
           locale: r.localeCode
         })
-      }).map(r => ({
+      }).map(r => {
+        if (!r.pageId || live.get(`${r.localeCode}:${r.path}`) === true ||
+          WIKI.auth.checkAccess(context.req.user, ['write:pages'], { path: r.path, locale: r.localeCode })) {
+          return r
+        }
+        return r.isFolder ? { ...r, pageId: null, title: _.last(r.path.split('/')) } : null
+      }).filter(r => r).map(r => ({
         ...r,
         parent: r.parent || 0,
         locale: r.localeCode
@@ -355,12 +384,18 @@ module.exports = {
           })
       }
 
+      // WIN: source pages that aren't live only for users with write:pages on them (win.31)
+      const live = await winLiveByPath(_.map(results, 'path'))
       return _.reduce(results, (result, val) => {
         // -> Check if user has access to source and linked page
         if (
           !WIKI.auth.checkAccess(context.req.user, ['read:pages'], { path: val.path, locale: args.locale }) ||
           !WIKI.auth.checkAccess(context.req.user, ['read:pages'], { path: val.link, locale: val.locale })
         ) {
+          return result
+        }
+        if (val.path && live.get(`${args.locale}:${val.path}`) !== true &&
+          !WIKI.auth.checkAccess(context.req.user, ['write:pages'], { path: val.path, locale: args.locale })) {
           return result
         }
 

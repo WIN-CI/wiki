@@ -251,13 +251,16 @@ module.exports = {
           }
           if (_.intersection(rule.roles, permissions).length > 0) {
             switch (rule.match) {
+              // WIN: START, END and EXACT compare case-insensitively (win.31). Page paths are
+              // case-sensitive, so a page at "Personal/x" escaped the deny rule "personal"
+              // and was readable by every employee.
               case 'START':
-                if (_.startsWith(`/${page.path}`, `/${rule.path}`)) {
+                if (_.startsWith(`/${page.path}`.toLowerCase(), `/${rule.path}`.toLowerCase())) {
                   checkState = this._applyPageRuleSpecificity({ rule, checkState, higherPriority: ['END', 'REGEX', 'EXACT', 'TAG'] })
                 }
                 break
               case 'END':
-                if (_.endsWith(page.path, rule.path)) {
+                if (_.endsWith(page.path.toLowerCase(), rule.path.toLowerCase())) {
                   checkState = this._applyPageRuleSpecificity({ rule, checkState, higherPriority: ['REGEX', 'EXACT', 'TAG'] })
                 }
                 break
@@ -279,7 +282,7 @@ module.exports = {
                 })
                 break
               case 'EXACT':
-                if (`/${page.path}` === `/${rule.path}`) {
+                if (`/${page.path}`.toLowerCase() === `/${rule.path}`.toLowerCase()) {
                   checkState = this._applyPageRuleSpecificity({ rule, checkState, higherPriority: [] })
                 }
                 break
