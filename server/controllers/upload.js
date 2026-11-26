@@ -11,6 +11,17 @@ const sanitize = require('sanitize-filename')
  * Upload files
  */
 router.post('/u', (req, res, next) => {
+  // WIN: check the upload right before multer parses the body and writes files to disk (win.32).
+  // Stock Wiki.js checked it afterwards, so guests could fill the disk or hit multer 1.4.4 DoS bugs.
+  if (!_.some(req.user.permissions, pm => _.includes(['write:assets', 'manage:system'], pm))) {
+    req.resume() // drain the unread body so the 403 reaches the client
+    return res.status(403).json({
+      succeeded: false,
+      message: 'You are not authorized to upload files.'
+    })
+  }
+  next()
+}, (req, res, next) => {
   multer({
     dest: path.resolve(WIKI.ROOTPATH, WIKI.config.dataPath, 'uploads'),
     limits: {

@@ -92,6 +92,17 @@ module.exports = async () => {
   // ----------------------------------------
 
   app.use(bodyParser.json({ limit: WIKI.config.bodyParserLimit || '1mb' }))
+  // WIN: /graphql takes no multipart bodies (win.32). Apollo 2 parses them with graphql-upload
+  // (busboy/dicer 0.3.0, crash bug CVE-2022-24434) before any auth check, and the schema has no
+  // upload field: the client sends JSON only and uploads go to /u. This also stops cross-site
+  // forms from posting GraphQL operations as multipart (GHSA-2p3c-p3qw-69r4).
+  app.use('/graphql', (req, res, next) => {
+    if (req.method === 'POST' && req.is('multipart/form-data')) {
+      req.resume()
+      return res.status(415).json({ errors: [{ message: 'Multipart requests are not accepted.' }] })
+    }
+    next()
+  })
   await WIKI.servers.startGraphQL()
 
   // ----------------------------------------
