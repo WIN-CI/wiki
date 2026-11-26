@@ -103,6 +103,18 @@ module.exports = async () => {
     }
     next()
   })
+  // WIN: no cross-site writes (win.33). Browsers send Origin on every cross-site POST; a POST to
+  // /graphql or /u from another site (or Origin "null") is refused, so a web page can't make a
+  // signed-in user's browser change the wiki. Requests without Origin (server-side clients such as
+  // the WINtranet API, curl) and same-origin requests from the wiki itself pass.
+  app.use(['/graphql', '/u'], (req, res, next) => {
+    const origin = req.get('origin')
+    if (req.method === 'POST' && origin && origin !== WIKI.config.host) {
+      req.resume()
+      return res.status(403).json({ errors: [{ message: 'Requests from other sites are not accepted.' }] })
+    }
+    next()
+  })
   await WIKI.servers.startGraphQL()
 
   // ----------------------------------------
